@@ -1,0 +1,23 @@
+name: ShellCheck Lint
+
+on:
+  push:
+    paths:
+      - 'x11vnc-setup.sh'
+  pull_request:
+    paths:
+      - 'x11vnc-setup.sh'
+  workflow_dispatch:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Run ShellCheck (strict)
+        run: shellcheck -x -e SC1090,SC1091 -f gcc ./x11vnc-setup.sh
