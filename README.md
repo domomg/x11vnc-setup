@@ -60,16 +60,6 @@ If you’re running something else obscure, install `x11vnc` manually first, the
 
 ---
 
-## Notes
-
-- The VNC password is stored securely and never echoed.
-
-- The systemd service runs under the chosen user and uses `ProtectSystem`, `ProtectHome`, and other security settings.
-
-- You can further restrict access with firewall rules or SSH tunnels.
-
----
-
 ## Known Limitations
 
 
