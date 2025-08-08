@@ -15,6 +15,8 @@ VNC_PASSWORD_FILE="$VNC_CONFIG_DIR/vncpwd"
 SERVICE_FILE="/etc/systemd/system/x11vnc.service"
 VNC_PORT=5900
 VNC_USER=""
+BIND_FLAG=""
+BIND_TYPE=""
 
 log() {
     echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
@@ -148,6 +150,37 @@ configure_port() {
     fi
 }
 
+configure_bind_interface() {
+    echo -e "${BLUE}"
+    echo "NETWORK SECURITY SETTING:"
+    echo "Choose how the VNC server should bind to the network:"
+    echo ""
+    echo "  [1] All interfaces (default) - accessible over LAN/internet"
+    echo "  [2] Localhost only - for use with secure SSH tunneling"
+    echo ""
+    echo -e "${NC}"
+    while true; do
+        read -r -p "Bind VNC server to [1/all] or [2/localhost]? (default: 1): " bind_choice
+        case "$bind_choice" in
+            "" | "1")
+                bind_address=""
+                BIND_TYPE="all"
+                BIND_FLAG=""
+                break
+                ;;
+            "2")
+                bind_address="localhost"
+                BIND_TYPE="localhost"
+                BIND_FLAG="-localhost"
+                break
+                ;;
+            *)
+                echo "Invalid choice. Please enter 1 or 2."
+                ;;
+        esac
+    done
+}
+
 create_systemd_service() {
     log "Creating systemd service..."
     local after_target="graphical.target"
@@ -160,6 +193,7 @@ create_systemd_service() {
     exec_start+=" -rfbauth $VNC_PASSWORD_FILE"
     exec_start+=" -rfbport $VNC_PORT"
     exec_start+=" -shared"
+    exec_start+=" $BIND_FLAG"
     exec_start+=" -display :0"
     exec_start+=" -bg"
     exec_start+=" -o /var/log/x11vnc.log"
@@ -342,6 +376,15 @@ show_connection_info() {
     echo "  Service: $SERVICE_FILE"
     echo "  Password: $VNC_PASSWORD_FILE"
     echo "  Log: /var/log/x11vnc.log"
+    if [[ "$BIND_TYPE" == "localhost" ]]; then
+        echo ""
+        echo "Since the server is listening only on localhost, use SSH tunneling to access it remotely:"
+        echo ""
+        echo "  ssh -L <local-port>:localhost:$VNC_PORT $VNC_USER@<your-server-ip>"
+        echo "  Example: ssh -L 5900:localhost:$VNC_PORT $VNC_USER@192.168.1.2"
+        echo ""
+        echo "Then connect your VNC client to localhost:<local-port> (e.g., localhost:5900)"
+    fi
     echo -e "${NC}"
 }
 
@@ -375,6 +418,7 @@ main() {
     setup_config_dir
     get_vnc_user
     configure_port
+    configure_bind_interface
     setup_password
     create_systemd_service
     create_autocutsel_helper_script
