@@ -378,7 +378,7 @@ show_connection_info() {
         echo "Since the server is listening only on localhost, use SSH tunneling to access it remotely:"
         echo ""
         echo "  ssh -L <local-port>:localhost:$VNC_PORT $VNC_USER@<your-server-ip>"
-        echo "  Example: ssh -L 5900:localhost:$VNC_PORT $VNC_USER@192.168.1.2"
+        echo "  Example: ssh -L 5900:localhost:$VNC_PORT $VNC_USER@$ip_address"
         echo ""
         echo "Then connect your VNC client to localhost:<local-port> (e.g., localhost:5900)"
     fi
