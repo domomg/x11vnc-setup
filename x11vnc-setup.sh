@@ -362,7 +362,6 @@ show_connection_info() {
     echo ""
     echo "Connect using a VNC client:"
     echo "  Address: $ip_address:$VNC_PORT"
-    echo "  Or: $ip_address::$VNC_PORT"
     echo ""
     echo "Service Management:"
     echo "  Status: systemctl status x11vnc.service"
