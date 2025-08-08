@@ -163,13 +163,11 @@ configure_bind_interface() {
         read -r -p "Bind VNC server to [1/all] or [2/localhost]? (default: 1): " bind_choice
         case "$bind_choice" in
             "" | "1")
-                bind_address=""
                 BIND_TYPE="all"
                 BIND_FLAG=""
                 break
                 ;;
             "2")
-                bind_address="localhost"
                 BIND_TYPE="localhost"
                 BIND_FLAG="-localhost"
                 break
