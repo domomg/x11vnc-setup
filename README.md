@@ -13,7 +13,7 @@ Unlike most VNC setups that spin up a separate virtual desktop, this script give
   Ubuntu, Debian, Linux Mint, CentOS/RHEL/Rocky, Fedora, Arch Linux, Manjaro, openSUSE
 - Secure password authentication (stored properly, never echoed)  
 - Systemd integration: Runs in the background and survives reboots  
-- Interactive setup: Guides you through user, port, and password configuration  
+- Interactive setup: Guides you through user, port, password, and network binding configuration (bind to all interfaces or localhost for security)
 - Hardened service: Systemd protections (`ProtectSystem`, `ProtectHome`, etc.)  
 - Clean and validated: Handles dependencies, checks for common pitfalls  
 
