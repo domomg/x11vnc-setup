@@ -70,7 +70,27 @@ install_x11vnc() {
             fi
             ;;
         fedora)
-            dnf install -y x11vnc autocutsel
+            dnf install -y x11vnc
+            info "Downloading autocutsel RPM for Fedora..."
+            AUTOCUTSEL_RPM_URL="https://github.com/domomg/autocutsel-rpm/releases/download/v0.10.1/autocutsel-0.10.1-1.fc42.x86_64.rpm"
+            TEMP_RPM="/tmp/autocutsel-0.10.1-1.fc42.x86_64.rpm"
+            if command -v curl &> /dev/null; then
+                curl -L -o "$TEMP_RPM" "$AUTOCUTSEL_RPM_URL"
+            elif command -v wget &> /dev/null; then
+                wget -O "$TEMP_RPM" "$AUTOCUTSEL_RPM_URL"
+            else
+                error "Neither curl nor wget found. Cannot download autocutsel RPM. Please install either of those with DNF and try again"
+                exit 1
+            fi
+            if [[ -f "$TEMP_RPM" ]]; then
+                info "Installing autocutsel from custom RPM..."
+                dnf install -y "$TEMP_RPM"
+                rm -f "$TEMP_RPM" 
+                success "Custom autocutsel RPM installed successfully"
+            else
+                error "Failed to download autocutsel RPM"
+            exit 1
+            fi
             ;;
         arch|manjaro)
             pacman -Sy --noconfirm x11vnc autocutsel
